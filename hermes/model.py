@@ -25,6 +25,9 @@ class Graph(dict):
         except KeyError:
             return
 
+    def get_neighbour_vertices(self, vertex):
+        return self.vertices[vertex]
+
 
 class Vertex:
     def __init__(self, element):
@@ -39,6 +42,15 @@ class Edge:
         self.origin = origin
         self.destination = destination
         self.element = element
+
+    def __add__(self, other):
+        return self.element + other
+
+    def __radd__(self, other):
+        if other == 0:
+            return self.element
+        else:
+            return self.__add__(other)
 
     def __repr__(self):
         return "'{origin}' -({element})-> '{destination}'".format(**self.__dict__)
