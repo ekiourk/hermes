@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from hermes.exceptions import PathNotFoundException
 
 
 def total_path_cost(graph, path):
@@ -13,6 +14,9 @@ def total_path_cost(graph, path):
             next_vertex = path[idx+1]
         except IndexError:
             return cost
-        edge = graph.vertices[vertex][next_vertex]
+        try:
+            edge = graph.vertices[vertex][next_vertex]
+        except KeyError:
+            raise PathNotFoundException()
         cost += edge.element
     return cost
