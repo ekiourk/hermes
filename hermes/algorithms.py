@@ -95,23 +95,42 @@ def shortest_path(graph, origin, destination, algorithm=dijkstra):
     return algorithm(graph, origin, destination)
 
 
-def breadth_first_search(graph, origin, destination, path=None):
+def breadth_first_search(graph, origin, destination, cutoff):
     """
     Given a graph, an origin and a destination
-    returns all paths from origin to destination.
+    generates all simple paths from origin to destination
+    that are smaller than the cutoff.
+
+    :param graph:
+    :param origin:
+    :param destination:
+    :param cutoff:
+    :return generator:
     """
-    path = path or []
-    result = []
-    path = path + [origin]
-    if origin == destination:
-        return [path]
-    for vertex in graph.get_neighbour_vertices(origin):
-        if vertex not in path:
-            for p in breadth_first_search(graph, vertex, destination, path):
-                result.append(p)
-    return result
+    visited = [origin]
+    stack = [iter(graph.get_neighbour_vertices(origin))]
+    while stack:
+        children = stack[-1]
+        child = next(children, None)
+        if child is None:
+            stack.pop()
+            visited.pop()
+        elif len(visited) < cutoff:
+            if child == destination:
+                yield visited + [destination]
+            elif child not in visited:
+                visited.append(child)
+                stack.append(iter(graph.get_neighbour_vertices(child)))
+        else:
+            # cutoff limit reached
+            if child == destination or destination in children:
+                yield visited + [destination]
+            stack.pop()
+            visited.pop()
 
 
-def find_paths(graph, origin, destination, algorithm=breadth_first_search):
-    return algorithm(graph, origin, destination)
+def find_paths(graph, origin, destination, cutoff=None, algorithm=breadth_first_search):
+    if cutoff < 1:
+        return []
+    return algorithm(graph, origin, destination, cutoff)
 

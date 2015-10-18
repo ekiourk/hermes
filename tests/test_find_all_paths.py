@@ -1,4 +1,4 @@
-from expects import expect, equal, contain
+from expects import expect, equal, contain, have_len
 from hermes import Graph, Vertex, Edge
 from hermes.algorithms import find_paths
 
@@ -31,8 +31,9 @@ class When_we_want_to_find_the_number_of_paths_between_two_vertices:
         self.graph.add_edge(self.edgeCD)
         self.graph.add_edge(self.edgeBD)
 
-    def because_we_want_all_available_paths_from_A_to_B(self):
-        self.paths = find_paths(self.graph, self.vertexA, self.vertexD)
+    def because_we_want_all_available_paths_from_A_to_B_and_those_smaller_than_2(self):
+        self.paths = list(find_paths(self.graph, self.vertexA, self.vertexD, 5))
+        self.paths_cutoff = list(find_paths(self.graph, self.vertexA, self.vertexD, 2))
 
     def it_should_return_the_correct_list_of_available_paths(self):
         expected_paths = [
@@ -40,8 +41,18 @@ class When_we_want_to_find_the_number_of_paths_between_two_vertices:
             [self.vertexA, self.vertexB, self.vertexD],
             [self.vertexA, self.vertexB, self.vertexC, self.vertexD]
         ]
+        expect(self.paths).to(have_len(3))
         for path in expected_paths:
             expect(self.paths).to(contain(path))
+
+    def it_should_return_the_correct_list_of_available_paths_smaller_than_2(self):
+        expected_paths = [
+            [self.vertexA, self.vertexD],
+            [self.vertexA, self.vertexB, self.vertexD]
+        ]
+        expect(self.paths_cutoff).to(have_len(2))
+        for path in expected_paths:
+            expect(self.paths_cutoff).to(contain(path))
 
 
 class When_we_want_to_find_the_number_of_paths_between_two_vertices_in_a_cyclic_graph:
@@ -66,7 +77,6 @@ class When_we_want_to_find_the_number_of_paths_between_two_vertices_in_a_cyclic_
         self.edgeAD = Edge(self.vertexA, self.vertexD, element=5)
         self.edgeAC = Edge(self.vertexA, self.vertexC, element=2)
         self.edgeBC = Edge(self.vertexB, self.vertexC, element=1)
-        self.edgeCB = Edge(self.vertexC, self.vertexB, element=2)
         self.edgeCD = Edge(self.vertexC, self.vertexD, element=1)
         self.edgeDB = Edge(self.vertexD, self.vertexB, element=3)
 
@@ -78,7 +88,7 @@ class When_we_want_to_find_the_number_of_paths_between_two_vertices_in_a_cyclic_
         self.graph.add_edge(self.edgeDB)
 
     def because_we_want_all_available_paths_from_A_to_B(self):
-        self.paths = find_paths(self.graph, self.vertexA, self.vertexD)
+        self.paths = list(find_paths(self.graph, self.vertexA, self.vertexD, 5))
 
     def it_should_return_the_correct_list_of_available_paths(self):
         expected_paths = [
@@ -86,5 +96,51 @@ class When_we_want_to_find_the_number_of_paths_between_two_vertices_in_a_cyclic_
             [self.vertexA, self.vertexC, self.vertexD],
             [self.vertexA, self.vertexB, self.vertexC, self.vertexD]
         ]
+        expect(self.paths).to(have_len(3))
+        for path in expected_paths:
+            expect(self.paths).to(contain(path))
+
+
+class When_we_want_to_find_the_number_of_paths_between_a_vertice_and_itself_in_a_cyclic_graph:
+    def given_a_graph(self):
+        """
+            <----------5----------
+           /        <--2---       \
+          /        /       \       \
+        (A)--3-->(B)--1-->(C)--1-->(D)
+         \        \       /        /
+          \        <-----/--3------
+           -----2------>/
+        """
+
+        self.graph = Graph()
+        self.vertexA = Vertex(element="Vertex A")
+        self.vertexB = Vertex(element="Vertex B")
+        self.vertexC = Vertex(element="Vertex C")
+        self.vertexD = Vertex(element="Vertex D")
+
+        self.edgeAB = Edge(self.vertexA, self.vertexB, element=3)
+        self.edgeAC = Edge(self.vertexA, self.vertexC, element=2)
+        self.edgeBC = Edge(self.vertexB, self.vertexC, element=1)
+        self.edgeCD = Edge(self.vertexC, self.vertexD, element=1)
+        self.edgeDA = Edge(self.vertexD, self.vertexA, element=5)
+        self.edgeDB = Edge(self.vertexD, self.vertexB, element=3)
+
+        self.graph.add_edge(self.edgeAB)
+        self.graph.add_edge(self.edgeAC)
+        self.graph.add_edge(self.edgeBC)
+        self.graph.add_edge(self.edgeCD)
+        self.graph.add_edge(self.edgeDA)
+        self.graph.add_edge(self.edgeDB)
+
+    def because_we_want_all_available_paths_from_A_to_B(self):
+        self.paths = list(find_paths(self.graph, self.vertexA, self.vertexA, 5))
+
+    def it_should_return_the_correct_list_of_available_paths(self):
+        expected_paths = [
+            [self.vertexA, self.vertexC, self.vertexD, self.vertexA],
+            [self.vertexA, self.vertexB, self.vertexC, self.vertexD, self.vertexA]
+        ]
+        expect(self.paths).to(have_len(2))
         for path in expected_paths:
             expect(self.paths).to(contain(path))
