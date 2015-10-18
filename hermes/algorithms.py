@@ -30,17 +30,7 @@ def total_path_cost(graph, path):
     return cost
 
 
-def shortest_path(graph, origin, destination):
-
-    if origin not in graph:
-        raise TypeError('Origin Vertex not found in the Graph.')
-    if destination not in graph:
-        raise TypeError('Destination Vertex not found in the Graph.')
-
-    return dijkstra(graph, origin, destination)
-
-
-def dijkstra(graph, origin, destination, done_vertices=None, distances=None, predecessors=None):
+def dijkstra(graph, origin, destination):
     """
     Given a graph, an origin and a destination
     returns the shortest path from origin to destination.
@@ -49,27 +39,11 @@ def dijkstra(graph, origin, destination, done_vertices=None, distances=None, pre
     distances dict keep the distances for the done vertices
     """
 
-    done_vertices = done_vertices or []
-    distances = distances or {}
-    predecessors = predecessors or {}
+    done_vertices = []
+    distances = {}
+    predecessors = {}
 
-    if origin == destination:
-        # We build the shortest path and return it
-        path = []
-        pred = destination
-        while pred is not None:
-            path.append(pred)
-            pred = predecessors.get(pred, None)
-
-        try:
-            total_distance = distances[destination]
-        except KeyError:
-            return [], float("inf")
-
-        # path at that point has the vertices from destination to origin, so we reverse it
-        path.reverse()
-        return path, total_distance
-    else:
+    while origin != destination:
         if not done_vertices:
             # in the first run we put the distance from origin to itself as 0
             distances[origin] = 0
@@ -87,11 +61,35 @@ def dijkstra(graph, origin, destination, done_vertices=None, distances=None, pre
 
         # At this point we iterate through the non done vertices
         # and find the vertex with the lowest distance.
-        # We run the recursively the dijkstra algorithm with that vertex as the new origin
+        # We set that vertex as the new origin
         undone_vertices = {}
         for vertex in graph.vertices:
             if vertex not in done_vertices:
                 undone_vertices[vertex] = distances.get(vertex, float('inf'))
-        new_origin = min(undone_vertices, key=undone_vertices.get)
+        origin = min(undone_vertices, key=undone_vertices.get)
 
-        return dijkstra(graph, new_origin, destination, done_vertices, distances, predecessors)
+    # We build the shortest path and return it
+    path = []
+    pred = destination
+    while pred is not None:
+        path.append(pred)
+        pred = predecessors.get(pred, None)
+
+    try:
+        total_distance = distances[destination]
+    except KeyError:
+        return [], float("inf")
+
+    # path at that point has the vertices from destination to origin order, so we reverse it
+    path.reverse()
+    return path, total_distance
+
+
+def shortest_path(graph, origin, destination, algorithm=dijkstra):
+
+    if origin not in graph:
+        raise TypeError('Origin Vertex not found in the Graph.')
+    if destination not in graph:
+        raise TypeError('Destination Vertex not found in the Graph.')
+
+    return algorithm(graph, origin, destination)
