@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from hermes.exceptions import PathNotFoundException
+from hermes.exceptions import PathNotFoundException, OriginNotFoundException, DestinationNotFoundException
 
 
 def enumerate_edges(path):
@@ -88,8 +88,30 @@ def dijkstra(graph, origin, destination):
 def shortest_path(graph, origin, destination, algorithm=dijkstra):
 
     if origin not in graph:
-        raise TypeError('Origin Vertex not found in the Graph.')
+        raise OriginNotFoundException()
     if destination not in graph:
-        raise TypeError('Destination Vertex not found in the Graph.')
+        raise DestinationNotFoundException()
 
     return algorithm(graph, origin, destination)
+
+
+def breadth_first_search(graph, origin, destination, path=None):
+    """
+    Given a graph, an origin and a destination
+    returns all paths from origin to destination.
+    """
+    path = path or []
+    result = []
+    path = path + [origin]
+    if origin == destination:
+        return [path]
+    for vertex in graph.get_neighbour_vertices(origin):
+        if vertex not in path:
+            for p in breadth_first_search(graph, vertex, destination, path):
+                result.append(p)
+    return result
+
+
+def find_paths(graph, origin, destination, algorithm=breadth_first_search):
+    return algorithm(graph, origin, destination)
+
