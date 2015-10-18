@@ -19,6 +19,12 @@ class Graph(dict):
             for vertex_dest, edge in vertex_destintations.items():
                 yield edge
 
+    def get_edge(self, origin, destination):
+        try:
+            return self.vertices[origin][destination]
+        except KeyError:
+            return
+
 
 class Vertex:
     def __init__(self, element):
