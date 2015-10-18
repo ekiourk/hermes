@@ -35,4 +35,4 @@ class Edge:
         self.element = element
 
     def __repr__(self):
-        return self.element
+        return "'{origin}' -({element})-> '{destination}'".format(**self.__dict__)

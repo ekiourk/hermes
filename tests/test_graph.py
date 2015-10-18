@@ -43,11 +43,11 @@ class When_we_want_to_work_with_a_graph_with_cycles:
         self.vertex3 = Vertex(element="Vertex 3")
         self.vertex4 = Vertex(element="Vertex 4")
 
-        self.edge12 = Edge(self.vertex1, self.vertex2, element="1")
-        self.edge23 = Edge(self.vertex2, self.vertex3, element="2")
-        self.edge34 = Edge(self.vertex3, self.vertex4, element="3")
-        self.edge43 = Edge(self.vertex4, self.vertex3, element="4")
-        self.edge42 = Edge(self.vertex4, self.vertex2, element="5")
+        self.edge12 = Edge(self.vertex1, self.vertex2, element=1)
+        self.edge23 = Edge(self.vertex2, self.vertex3, element=2)
+        self.edge34 = Edge(self.vertex3, self.vertex4, element=3)
+        self.edge43 = Edge(self.vertex4, self.vertex3, element=4)
+        self.edge42 = Edge(self.vertex4, self.vertex2, element=5)
 
         self.graph.add_edge(self.edge12)
         self.graph.add_edge(self.edge23)
