@@ -42,8 +42,10 @@ def dijkstra(graph, origin, destination):
     done_vertices = []
     distances = {}
     predecessors = {}
+    first_run = True
 
-    while origin != destination:
+    while origin != destination or first_run:
+        first_run = False
         if not done_vertices:
             # in the first run we put the distance from origin to itself as 0
             distances[origin] = 0
@@ -56,6 +58,12 @@ def dijkstra(graph, origin, destination):
                 if new_distance < distances.get(neighbor, float('inf')):
                     distances[neighbor] = new_distance
                     predecessors[neighbor] = origin
+            elif neighbor == destination:
+                if origin in distances:
+                    new_distance = distances[origin] + neighbours[neighbor]
+                    distances[neighbor] = new_distance
+                    predecessors[neighbor] = origin
+
 
         done_vertices.append(origin)  # mark as a done vertex
 
@@ -66,12 +74,17 @@ def dijkstra(graph, origin, destination):
         for vertex in graph.vertices:
             if vertex not in done_vertices:
                 undone_vertices[vertex] = distances.get(vertex, float('inf'))
+        if not undone_vertices:
+            break
         origin = min(undone_vertices, key=undone_vertices.get)
 
     # We build the shortest path and return it
     path = []
     pred = destination
     while pred is not None:
+        if pred in path:
+            path.append(pred)
+            break
         path.append(pred)
         pred = predecessors.get(pred, None)
 

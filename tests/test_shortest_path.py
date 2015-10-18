@@ -67,6 +67,33 @@ class When_we_want_to_find_the_path_with_the_smaller_cost_on_a_more_compicated_g
         expect(self.cost).to(equal(6))
 
 
+class When_we_want_to_find_the_shortest_path_with_the_same_origin_and_destination:
+    def given_a_graph(self):
+
+        self.graph = Graph()
+        self.vertex1 = Vertex(element="Vertex 1")
+        self.vertex2 = Vertex(element="Vertex 2")
+        self.vertex3 = Vertex(element="Vertex 3")
+
+        self.edge12 = Edge(self.vertex1, self.vertex2, element=1)
+        self.edge23 = Edge(self.vertex2, self.vertex3, element=1)
+        self.edge31 = Edge(self.vertex3, self.vertex1, element=1)
+
+        self.graph.add_edge(self.edge12)
+        self.graph.add_edge(self.edge23)
+        self.graph.add_edge(self.edge31)
+
+    def because_we_calculate_the_most_cost_effective_path(self):
+        self.path, self.cost = shortest_path(self.graph, self.vertex1, self.vertex1)
+
+    def it_should_return_the_shortest_path(self):
+        expected_path = [self.vertex1, self.vertex2, self.vertex3, self.vertex1]
+        expect(self.path).to(equal(expected_path))
+
+    def it_should_return_the_correct_cost_of_the_shortest_path(self):
+        expect(self.cost).to(equal(3))
+
+
 class When_we_want_to_find_the_path_when_it_is_unreachable:
     def given_a_graph(self):
 
