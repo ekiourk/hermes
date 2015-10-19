@@ -1,6 +1,6 @@
 from expects import expect, equal, contain, have_len
 from hermes import Graph, Vertex, Edge
-from hermes.algorithms import find_paths
+from hermes.algorithms import find_paths, find_paths_equal_to_size
 
 
 class When_we_want_to_find_the_number_of_paths_between_two_vertices:
@@ -33,7 +33,10 @@ class When_we_want_to_find_the_number_of_paths_between_two_vertices:
 
     def because_we_want_all_available_paths_from_A_to_B_and_those_smaller_than_2(self):
         self.paths = list(find_paths(self.graph, self.vertexA, self.vertexD, 5))
-        self.paths_cutoff = list(find_paths(self.graph, self.vertexA, self.vertexD, 2))
+        self.paths_less_than_cutoff = list(find_paths(self.graph, self.vertexA, self.vertexD, 2))
+        self.paths_equal_2_size = list(find_paths_equal_to_size(self.graph, self.vertexA, self.vertexD, 2))
+        self.paths_equal_3_size = list(find_paths_equal_to_size(self.graph, self.vertexA, self.vertexD, 3))
+        self.paths_equal_4_size = list(find_paths_equal_to_size(self.graph, self.vertexA, self.vertexD, 4))
 
     def it_should_return_the_correct_list_of_available_paths(self):
         expected_paths = [
@@ -45,14 +48,38 @@ class When_we_want_to_find_the_number_of_paths_between_two_vertices:
         for path in expected_paths:
             expect(self.paths).to(contain(path))
 
-    def it_should_return_the_correct_list_of_available_paths_smaller_than_2(self):
+    def it_should_return_the_correct_list_of_available_paths_smaller_than_2_size(self):
         expected_paths = [
             [self.vertexA, self.vertexD],
             [self.vertexA, self.vertexB, self.vertexD]
         ]
-        expect(self.paths_cutoff).to(have_len(2))
+        expect(self.paths_less_than_cutoff).to(have_len(2))
         for path in expected_paths:
-            expect(self.paths_cutoff).to(contain(path))
+            expect(self.paths_less_than_cutoff).to(contain(path))
+
+    def it_should_return_the_correct_list_of_available_paths_equal_to_2_size(self):
+        expected_paths = [
+            [self.vertexA, self.vertexD]
+        ]
+        expect(self.paths_equal_2_size).to(have_len(1))
+        for path in expected_paths:
+            expect(self.paths_equal_2_size).to(contain(path))
+
+    def it_should_return_the_correct_list_of_available_paths_equal_to_3_size(self):
+        expected_paths = [
+            [self.vertexA, self.vertexB, self.vertexD]
+        ]
+        expect(self.paths_equal_3_size).to(have_len(1))
+        for path in expected_paths:
+            expect(self.paths_equal_3_size).to(contain(path))
+
+    def it_should_return_the_correct_list_of_available_paths_equal_to_4_size(self):
+        expected_paths = [
+            [self.vertexA, self.vertexB, self.vertexC, self.vertexD]
+        ]
+        expect(self.paths_equal_4_size).to(have_len(1))
+        for path in expected_paths:
+            expect(self.paths_equal_4_size).to(contain(path))
 
 
 class When_we_want_to_find_the_number_of_paths_between_two_vertices_in_a_cyclic_graph:
