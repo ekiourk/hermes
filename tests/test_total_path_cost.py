@@ -6,26 +6,33 @@ from hermes.exceptions import PathNotFoundException
 
 class When_we_want_to_find_the_cost_of_a_path:
     def given_a_graph_and_a_path(self):
+        """
+                            <--4---
+                           /       \
+        (A)--1-->(B)--2-->(C)--3-->(D)
+                  \                /
+                   <-------5-------
+        """
 
         self.graph = Graph()
-        self.vertex1 = Vertex(element="Vertex 1")
-        self.vertex2 = Vertex(element="Vertex 2")
-        self.vertex3 = Vertex(element="Vertex 3")
-        self.vertex4 = Vertex(element="Vertex 4")
+        self.vertexA = Vertex(element="Vertex A")
+        self.vertexB = Vertex(element="Vertex B")
+        self.vertexC = Vertex(element="Vertex C")
+        self.vertexD = Vertex(element="Vertex D")
 
-        self.edge12 = Edge(self.vertex1, self.vertex2, element=1)
-        self.edge23 = Edge(self.vertex2, self.vertex3, element=2)
-        self.edge34 = Edge(self.vertex3, self.vertex4, element=3)
-        self.edge43 = Edge(self.vertex4, self.vertex3, element=4)
-        self.edge42 = Edge(self.vertex4, self.vertex2, element=5)
+        self.edgeAB = Edge(self.vertexA, self.vertexB, element=1)
+        self.edgeBC = Edge(self.vertexB, self.vertexC, element=2)
+        self.edgeCD = Edge(self.vertexC, self.vertexD, element=3)
+        self.edgeDC = Edge(self.vertexD, self.vertexC, element=4)
+        self.edgeDB = Edge(self.vertexD, self.vertexB, element=5)
 
-        self.graph.add_edge(self.edge12)
-        self.graph.add_edge(self.edge23)
-        self.graph.add_edge(self.edge34)
-        self.graph.add_edge(self.edge43)
-        self.graph.add_edge(self.edge42)
+        self.graph.add_edge(self.edgeAB)
+        self.graph.add_edge(self.edgeBC)
+        self.graph.add_edge(self.edgeCD)
+        self.graph.add_edge(self.edgeDC)
+        self.graph.add_edge(self.edgeDB)
 
-        self.path = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
+        self.path = [self.vertexA, self.vertexB, self.vertexC, self.vertexD]
 
     def because_we_calculate_the_cost_of_the_path(self):
         self.cost = total_path_cost(self.graph, self.path)
@@ -38,16 +45,16 @@ class When_we_want_to_find_the_cost_of_a_path_that_does_not_exist:
     def given_a_graph_and_a_path_that_is_not_valid(self):
 
         self.graph = Graph()
-        self.vertex1 = Vertex(element="Vertex 1")
-        self.vertex2 = Vertex(element="Vertex 2")
-        self.vertex3 = Vertex(element="Vertex 3")
+        self.vertexA = Vertex(element="Vertex A")
+        self.vertexB = Vertex(element="Vertex B")
+        self.vertexC = Vertex(element="Vertex C")
 
-        self.edge12 = Edge(self.vertex1, self.vertex2, element=1)
-        self.edge32 = Edge(self.vertex3, self.vertex2, element=2)
-        self.graph.add_edge(self.edge12)
-        self.graph.add_edge(self.edge32)
+        self.edgeAB = Edge(self.vertexA, self.vertexB, element=1)
+        self.edgeCB = Edge(self.vertexC, self.vertexB, element=2)
+        self.graph.add_edge(self.edgeAB)
+        self.graph.add_edge(self.edgeCB)
 
-        self.path = [self.vertex3, self.vertex2, self.vertex1]
+        self.path = [self.vertexC, self.vertexB, self.vertexA]
 
     def because_we_calculate_the_cost_of_the_invlid_path(self):
         self.callback = lambda: total_path_cost(self.graph, self.path)
@@ -60,12 +67,12 @@ class When_we_want_to_find_the_cost_on_an_empty_graph:
     def given_an_empty_graph_and_a_path_that_is_not_valid(self):
 
         self.graph = Graph()
-        self.vertex1 = Vertex(element="Vertex 1")
-        self.vertex2 = Vertex(element="Vertex 2")
+        self.vertexA = Vertex(element="Vertex A")
+        self.vertexB = Vertex(element="Vertex B")
 
-        self.edge12 = Edge(self.vertex1, self.vertex2, element=1)
+        self.edgeAB = Edge(self.vertexA, self.vertexB, element=1)
 
-        self.path = [self.vertex1, self.vertex2]
+        self.path = [self.vertexA, self.vertexB]
 
     def because_we_calculate_the_cost_of_the_invlid_path(self):
         self.callback = lambda: total_path_cost(self.graph, self.path)
