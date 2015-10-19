@@ -155,3 +155,9 @@ def find_paths_equal_to_size(graph, origin, destination, size, algorithm=breadth
         return []
     return algorithm(graph, origin, destination, size+1, lambda x: len(x) == size)
 
+
+def find_paths_lt_hours(graph, origin, destination, hours, algorithm=breadth_first_search):
+    if hours < 1:
+        return []
+    return algorithm(graph, origin, destination, len(graph), lambda x: total_path_cost(graph, x) < hours)
+

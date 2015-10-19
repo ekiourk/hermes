@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from hermes import Graph, Edge, Vertex
-from hermes.algorithms import total_path_cost, shortest_path, find_paths, find_paths_equal_to_size
+from hermes.algorithms import total_path_cost, shortest_path, find_paths, find_paths_equal_to_size, find_paths_lt_hours
 from hermes.exceptions import PathNotFoundException
 
 
@@ -10,15 +10,6 @@ def total_path_cost_days(*args, **kwargs):
         return "{} days".format(total_path_cost(*args, **kwargs))
     except PathNotFoundException:
         return "not possible"
-
-
-#TODO: Create a filter for the dijkstra algorithm
-def count_paths_with_less_than_a_number_of_days(graph, origin, destination, days):
-    counter = 0
-    for path in find_paths(graph, origin, destination, 10):
-        if total_path_cost(graph, path) <= days:
-            counter += 1
-    return counter
 
 
 shipping_graph = Graph()
@@ -101,5 +92,5 @@ Find the number of routes from Liverpool to Liverpool where the journey time is 
 """
 
 print("The number of routes from Liverpool to Liverpool where the journey time is less than or equal to 25 days are {}".format(
-    count_paths_with_less_than_a_number_of_days(shipping_graph, liverpool, liverpool, 25)
+    len(list(find_paths_lt_hours(shipping_graph, liverpool, liverpool, 25)))
 ))
