@@ -9,6 +9,9 @@ class Graph(dict):
         self.add_vertex(edge.destination)
         self[edge.origin][edge.destination] = edge
 
+    def create_edge(self, origin, destination, element):
+        self.add_edge(Edge(Vertex(origin), Vertex(destination), element))
+
     @property
     def vertices(self):
         return self
@@ -36,6 +39,12 @@ class Vertex:
     def __repr__(self):
         return self.element
 
+    def __eq__(self, other):
+        return self.element == other.element
+
+    def __hash__(self):
+        return hash(self.element)
+
 
 class Edge:
     def __init__(self, origin, destination, element):
@@ -54,3 +63,9 @@ class Edge:
 
     def __repr__(self):
         return "'{origin}' -({element})-> '{destination}'".format(**self.__dict__)
+
+    def __eq__(self, other):
+        return str(self) == str(other)
+
+    def __hash__(self):
+        return hash(str(self))
