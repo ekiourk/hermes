@@ -1,3 +1,6 @@
+# Hermes Graphs library
+[![Build Status](https://travis-ci.org/ekiourk/hermes.svg?branch=master)](https://travis-ci.org/ekiourk/hermes)
+
 ### How do I install hermes for development?
 
 You need to have python3 installed on your system

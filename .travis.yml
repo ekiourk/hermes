@@ -1,0 +1,8 @@
+language: python
+python:
+  - "3.4"
+  - "3.5"
+# command to install dependencies
+install: "./install_requirements_develop.sh"
+# command to run tests
+script: "run-contexts -sv tests"
