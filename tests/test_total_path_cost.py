@@ -43,6 +43,9 @@ class When_we_want_to_find_the_cost_of_a_path:
 
 class When_we_want_to_find_the_cost_of_a_path_that_does_not_exist:
     def given_a_graph_and_a_path_that_is_not_valid(self):
+        """
+        (A)--1-->(B)<--2--(C)
+        """
 
         self.graph = Graph()
         self.vertexA = Vertex(element="Vertex A")
